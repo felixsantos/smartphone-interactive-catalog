@@ -5,6 +5,7 @@
 [![WebGL / 3D](https://img.shields.io/badge/WebGL-3D%20Model%20Viewer-00f2fe?style=for-the-badge&logo=webgl&logoColor=black)](https://modelviewer.dev/)
 [![GSAP](https://img.shields.io/badge/GSAP-Animations-88CE02?style=for-the-badge&logo=greensock&logoColor=white)](https://greensock.com/gsap/)
 [![SCSS](https://img.shields.io/badge/SCSS-Glassmorphism-CC6699?style=for-the-badge&logo=sass&logoColor=white)](https://sass-lang.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 > **Aplicação Web Frontend de Alta Performance para Visualização, Comparação e Edição em Tempo Real de Smartphones 3D.**
 > Desenvolvida com **Angular 18 (Standalone Components)**, **WebGL/Model-Viewer**, **GSAP** e um painel **CMS totalmente interativo**.
