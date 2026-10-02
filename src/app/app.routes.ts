@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'visualizador/apex-ultra-16-pro', pathMatch: 'full' },
+  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
   { 
     path: 'catalogo', 
     loadComponent: () => import('./components/catalog/catalog.component').then(m => m.CatalogComponent) 
