@@ -1,21 +1,35 @@
-MIT License
+Copyright (c) 2026 Felix Santos. All Rights Reserved.
 
-Copyright (c) 2026 Felix Santos
+LICENÇA DE USO COM CONSULTA PRÉVIA
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Este software e todos os seus arquivos de código-fonte, design, estrutura,
+componentes e documentação (o "Software") são de propriedade exclusiva de
+Felix Santos ("Autor").
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+PERMISSÕES:
+- ✅ Visualizar e estudar o código para fins educacionais e de referência.
+- ✅ Referenciar este projeto em portfólios, artigos ou avaliações técnicas
+     com atribuição ao autor original.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+RESTRIÇÕES — As seguintes ações são EXPRESSAMENTE PROIBIDAS sem autorização
+prévia e escrita do Autor:
+- ❌ Copiar, reproduzir ou redistribuir qualquer parte do código-fonte.
+- ❌ Modificar, adaptar ou criar trabalhos derivados baseados neste Software.
+- ❌ Usar este Software, total ou parcialmente, em projetos comerciais ou
+     não comerciais.
+- ❌ Publicar ou compartilhar versões modificadas ou originais deste Software.
+
+CONSULTA PRÉVIA:
+Para qualquer uso além da visualização e referência pessoal, entre em contato
+com o Autor antes de proceder:
+
+  GitHub : https://github.com/felixsantos
+  E-mail : (seu e-mail profissional)
+
+O Autor se reserva o direito de conceder ou negar permissões caso a caso,
+mediante acordo formal e por escrito.
+
+ISENÇÃO DE GARANTIA:
+O SOFTWARE É FORNECIDO "NO ESTADO EM QUE SE ENCONTRA", SEM GARANTIA DE
+NENHUM TIPO. O AUTOR NÃO SE RESPONSABILIZA POR QUALQUER DANO DECORRENTE
+DO USO OU INCAPACIDADE DE USO DESTE SOFTWARE.
