@@ -1,0 +1,55 @@
+<div 
+  class="spec-callout-wrapper" 
+  [ngClass]="spec.direcaoSeta || 'top-left'">
+  
+  <!-- Hardware Focal Target Reticle -->
+  <div #reticlePoint class="reticle-target" (click)="toggleExpand()">
+    <div class="reticle-ring"></div>
+    <div class="reticle-dot"></div>
+    <div class="pulse-wave"></div>
+  </div>
+
+  <!-- Animated Vector Connector Line with Unique ID to prevent DOM SVG collisions -->
+  <svg class="connector-svg" viewBox="0 0 100 80" preserveAspectRatio="none">
+    <defs>
+      <linearGradient [id]="'lineGradient-' + (spec.id || 'default')" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00f2fe" stop-opacity="1" />
+        <stop offset="100%" stop-color="#4facfe" stop-opacity="0.8" />
+      </linearGradient>
+    </defs>
+    <path 
+      #svgPath 
+      [attr.d]="getPathD()" 
+      fill="none" 
+      [attr.stroke]="'url(#lineGradient-' + (spec.id || 'default') + ')'" 
+      stroke-width="3.5" 
+      stroke-linecap="round" />
+  </svg>
+
+  <!-- Glassmorphism Specification Badge Card -->
+  <div #specBadge class="spec-card-badge" [class.expanded]="isExpanded" (click)="toggleExpand()">
+    <div class="badge-header">
+      <div class="badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+      <div class="badge-text-group">
+        <span class="badge-title">{{ spec.titulo }}</span>
+        <span class="badge-value">{{ spec.valor }}</span>
+      </div>
+      <div class="badge-chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    @if (spec.detalhe && isExpanded) {
+      <div class="badge-detail">
+        <p>{{ spec.detalhe }}</p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #080b11;
+  color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(0, 242, 254, 0.3);
+  color: #ffffff;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080b11;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+/* GLOBAL FULLSCREEN SEMI-TRANSPARENT CURSOR OVERALL ENGINE (INCLUDES 3D MODEL, CANVAS, IFRAME & SHADOW DOM) */
+body.fullscreen-mode-active,
+body.fullscreen-mode-active *,
+body.fullscreen-mode-active *::before,
+body.fullscreen-mode-active *::after,
+body.fullscreen-mode-active *:hover,
+body.fullscreen-mode-active *:active,
+body.fullscreen-mode-active model-viewer,
+body.fullscreen-mode-active .google-3d-viewer,
+body.fullscreen-mode-active iframe,
+body.fullscreen-mode-active canvas,
+body.fullscreen-mode-active svg,
+body.fullscreen-mode-active path {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.15)" stroke="rgba(0,242,254,0.3)" stroke-width="1.5" d="M3 3l7 18 3-7 7-3L3 3z"/></svg>') 0 0, auto !important;
+}

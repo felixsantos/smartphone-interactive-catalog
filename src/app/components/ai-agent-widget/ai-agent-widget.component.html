@@ -1,0 +1,100 @@
+<!-- BOTÃO FLUTUANTE DE ATIVAÇÃO DO AGENTE DE IA -->
+<button class="ai-agent-trigger-btn" (click)="toggleWidget()" [class.active]="isOpen" aria-label="Agente de IA">
+  <div class="ai-icon-pulse">
+    <span class="ai-emoji">🤖</span>
+  </div>
+  <span class="btn-label">Assistente IA</span>
+</button>
+
+<!-- PAINEL / DRAWER FLUTUANTE DO AGENTE DE IA -->
+@if (isOpen) {
+  <div class="ai-agent-drawer-overlay">
+    <div class="ai-agent-panel">
+      <!-- CABEÇALHO -->
+      <div class="ai-panel-header">
+        <div class="header-title">
+          <span class="ai-badge">GENAI 2.5</span>
+          <h3>Agente de Inteligência Artificial</h3>
+        </div>
+        <button class="close-btn" (click)="isOpen = false">&times;</button>
+      </div>
+
+      <!-- TOAST DE NOTIFICAÇÃO -->
+      @if (toastMessage) {
+        <div class="ai-toast-notification">
+          {{ toastMessage }}
+        </div>
+      }
+
+      <!-- NAVEGAÇÃO ENTRE ABAS -->
+      <div class="ai-tabs-nav">
+        <button [class.active]="activeTab === 'chat'" (click)="activeTab = 'chat'">
+          💬 Gerar Aparelho
+        </button>
+        <button [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">
+          ⚙️ Template do Prompt
+        </button>
+        <button [class.active]="activeTab === 'apikey'" (click)="activeTab = 'apikey'">
+          🗝️ Chave API
+        </button>
+      </div>
+
+      <div class="ai-panel-content">
+        <!-- ABA 1: CHAT / GERAR APARELHO -->
+        @if (activeTab === 'chat') {
+          <div class="tab-section">
+            <label class="section-label">Digite o nome ou ideia do Smartphone:</label>
+            <div class="input-prompt-group">
+              <input 
+                type="text" 
+                [(ngModel)]="userPrompt" 
+                placeholder="Ex: Xiaomi 15 Ultra em Titânio Ciano com 200MP..." 
+                (keyup.enter)="generateModel()"
+              />
+              <button class="btn-generate" (click)="generateModel()" [disabled]="isLoading">
+                {{ isLoading ? '⏳ Pesquisando & Gerando...' : '✨ Gerar Ficha Técnica & 3D' }}
+              </button>
+            </div>
+
+            <!-- PREVIEW DO JSON GERADO E EDITÁVEL -->
+            @if (generatedPhone) {
+              <div class="json-preview-container">
+                <div class="preview-bar">
+                  <span class="model-name-tag">📱 {{ generatedPhone.modelo }}</span>
+                  <button class="btn-import-now" (click)="importToCatalog()">
+                    🚀 Importar para o Catálogo e Abrir!
+                  </button>
+                </div>
+                <label class="json-subtext">Você pode editar o JSON abaixo livremente antes de importar:</label>
+                <textarea rows="11" [(ngModel)]="jsonTextString" (change)="syncJsonText()"></textarea>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ABA 2: EDITAR TEMPLATE DO PROMPT DE SISTEMA -->
+        @if (activeTab === 'settings') {
+          <div class="tab-section">
+            <label class="section-label">Template do Prompt de Sistema (Editável):</label>
+            <p class="help-text">Altere as diretrizes abaixo para personalizar como a IA formata os slides, apontadores e cores:</p>
+            <textarea rows="10" [(ngModel)]="customSystemPrompt" class="prompt-template-textarea"></textarea>
+            <div class="actions-row">
+              <button class="btn-save-template" (click)="saveSystemPrompt()">💾 Salvar Novo Template</button>
+              <button class="btn-reset-template" (click)="resetSystemPrompt()">🔄 Restaurar Padrão</button>
+            </div>
+          </div>
+        }
+
+        <!-- ABA 3: CHAVE API DO GEMINI -->
+        @if (activeTab === 'apikey') {
+          <div class="tab-section">
+            <label class="section-label">Google Gemini API Key (Opcional):</label>
+            <p class="help-text">Insira sua chave para utilizar chamadas ao modelo real `gemini-2.5-flash`. Caso não insira, o agente usará o gerador inteligente de simulação local.</p>
+            <input type="password" [(ngModel)]="apiKeyInput" placeholder="AIzaSy..." class="apikey-input" />
+            <button class="btn-save-apikey" (click)="saveApiKey()">🗝️ Salvar Chave API</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

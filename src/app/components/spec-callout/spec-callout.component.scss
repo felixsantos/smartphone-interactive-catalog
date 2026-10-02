@@ -1,0 +1,213 @@
+.spec-callout-wrapper {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+
+  /* Reticle Target Point */
+  .reticle-target {
+    opacity: 0;
+    width: 28px;
+    height: 28px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .reticle-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1.5px solid #00f2fe;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .reticle-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+    }
+
+    .pulse-wave {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 242, 254, 0.4);
+      animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    &:hover .reticle-ring {
+      transform: scale(1.3);
+      border-color: #ffffff;
+      box-shadow: 0 0 20px #00f2fe;
+    }
+  }
+
+  /* Connector Vector SVG */
+  .connector-svg {
+    opacity: 1;
+    position: absolute;
+    width: 120px;
+    height: 80px;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  /* Spec Card Badge */
+  .spec-card-badge {
+    opacity: 0;
+    position: absolute;
+    min-width: 220px;
+    max-width: 320px;
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(0, 242, 254, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+
+    &:hover {
+      border-color: rgba(0, 242, 254, 0.7);
+      box-shadow: 0 12px 40px rgba(0, 242, 254, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .badge-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .badge-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: rgba(0, 242, 254, 0.15);
+        color: #00f2fe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .badge-text-group {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .badge-title {
+          font-size: 11px;
+          font-weight: 600;
+          color: #94a3b8;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+        }
+
+        .badge-value {
+          font-size: 14px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-top: 1px;
+        }
+      }
+
+      .badge-chevron {
+        color: #64748b;
+        transition: transform 0.3s ease;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    .badge-detail {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+
+    &.expanded .badge-chevron {
+      transform: rotate(180deg);
+      color: #00f2fe;
+    }
+  }
+
+  /* Direction Positioning Logic */
+  &.top-left {
+    .connector-svg { right: 14px; bottom: 14px; }
+    .spec-card-badge { right: 110px; bottom: 60px; }
+  }
+
+  &.top-right {
+    .connector-svg { left: 14px; bottom: 14px; }
+    .spec-card-badge { left: 110px; bottom: 60px; }
+  }
+
+  &.bottom-left {
+    .connector-svg { right: 14px; top: 14px; }
+    .spec-card-badge { right: 110px; top: 60px; }
+  }
+
+  &.bottom-right {
+    .connector-svg { left: 14px; top: 14px; }
+    .spec-card-badge { left: 110px; top: 60px; }
+  }
+
+  &.top {
+    .connector-svg { left: -46px; bottom: 14px; }
+    .spec-card-badge { bottom: 80px; left: 50%; transform: translateX(-50%); }
+  }
+
+  &.bottom {
+    .connector-svg { left: -46px; top: 14px; }
+    .spec-card-badge { top: 80px; left: 50%; transform: translateX(-50%); }
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .spec-callout-wrapper {
+    .connector-svg { display: none; }
+    .spec-card-badge {
+      position: fixed;
+      left: 50% !important;
+      bottom: 90px !important;
+      right: auto !important;
+      top: auto !important;
+      transform: translateX(-50%) !important;
+      width: 90vw;
+      max-width: 340px;
+      z-index: 50;
+    }
+  }
+}

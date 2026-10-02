@@ -1,0 +1,159 @@
+.navbar-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(10, 12, 16, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 64px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(79, 172, 254, 0.4);
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: #0b0f19;
+      }
+    }
+
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+      background: linear-gradient(180deg, #ffffff 0%, #a0aab8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      .brand-sub {
+        font-weight: 300;
+        color: #4facfe;
+        -webkit-text-fill-color: #4facfe;
+      }
+    }
+  }
+
+  .device-active-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 13px;
+
+    .device-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00f2fe;
+      box-shadow: 0 0 10px #00f2fe;
+      animation: pulse 2s infinite;
+    }
+
+    .device-name {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .device-price {
+      color: #94a3b8;
+      font-size: 12px;
+      padding-left: 6px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      &:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      &.active {
+        color: #00f2fe;
+        background: rgba(0, 242, 254, 0.08);
+        border: 1px solid rgba(0, 242, 254, 0.2);
+      }
+
+      &.admin-nav-btn {
+        background: rgba(0, 242, 254, 0.15);
+        color: #00f2fe;
+        border: 1px solid rgba(0, 242, 254, 0.3);
+
+        &:hover {
+          background: #00f2fe;
+          color: #080b11;
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+@media (max-width: 768px) {
+  .navbar-header {
+    .device-active-badge {
+      display: none;
+    }
+
+    .nav-links .nav-item span {
+      display: none;
+    }
+  }
+}

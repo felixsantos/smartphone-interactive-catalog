@@ -1,0 +1,370 @@
+<div 
+  class="comparator-page-container"
+  [class.drawer-open]="isSideDrawerOpen && isEditMode"
+  [class.fullscreen-active]="isFullscreenMode">
+
+  <!-- FLOATING DISCRETE TOOLBAR (TOP RIGHT: EDIT & FULLSCREEN BUTTONS) -->
+  <div class="discrete-presentation-toolbar">
+    <a routerLink="/catalogo" class="btn-toolbar-discrete" title="Voltar ao Catálogo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span>Catálogo</span>
+    </a>
+
+    <a [routerLink]="['/visualizador', smartphoneB?.id || 'samsung-z-fold8-3d']" class="btn-toolbar-discrete" title="Ver Visualizador 3D Solo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span>Visualizador Solo</span>
+    </a>
+
+    <button class="btn-toolbar-discrete" [class.active]="isEditMode" (click)="toggleEditMode()" title="Alternar Modo Edição CMS">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span>{{ isEditMode ? 'Edição Ativa' : 'Modo Edição' }}</span>
+    </button>
+
+    <button class="btn-toolbar-discrete btn-fullscreen" [class.active]="isFullscreenMode" (click)="toggleFullscreen()" title="Alternar Modo Tela Cheia">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        @if (!isFullscreenMode) {
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        } @else {
+          <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+        }
+      </svg>
+    </button>
+
+    @if (isEditMode && !isFullscreenMode) {
+      <button class="btn-toolbar-discrete btn-drawer-trigger" (click)="openSideDrawer('modelA')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Painel CMS ⚔️</span>
+      </button>
+    }
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  @if (notificationMsg && !isFullscreenMode) {
+    <div class="edit-toast">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>{{ notificationMsg }}</span>
+    </div>
+  }
+
+  <!-- MAIN DUAL 3D COMPARATOR STAGE WITH DIAGONAL SPLIT -->
+  <div class="comparator-dual-stage">
+
+    <!-- DIAGONAL SPLIT BACKGROUND LAYERS (LILÁS ESQUERDA / AZUL DIREITA) -->
+    <div class="diagonal-split-bg left-lilac"></div>
+    <div class="diagonal-split-bg right-blue"></div>
+    <div class="diagonal-divider-line"></div>
+
+    <!-- CENTER RED RECTANGLE POSITION: STANDALONE VS CRYSTAL EMBLEM -->
+    <div class="vs-crystal-emblem-center">
+      <div class="crystal-facets"></div>
+      <span class="vs-text">VS</span>
+    </div>
+
+    <!-- LEFT GREEN RECTANGLE POSITION: DYNAMIC DRAGGABLE FLOATING SPECS FOR MODELO A (LILÁS) -->
+    <div class="floating-specs-column specs-left-green">
+      @for (spec of slideA?.especificacoes || []; track spec.id) {
+        <div class="floating-spec-card lilac" 
+             [style.transform]="'translate(' + (spec.posXOffset || 0) + 'px, ' + (spec.posYOffset || 0) + 'px)'"
+             [class.active-drag]="activeDragSpecId === spec.id"
+             (mousedown)="startSpecDrag($event, spec, 'A')">
+          <span class="spec-label" [style.font-size.px]="10 * (spec.fontSizeScale || 1.0)">{{ spec.titulo }}</span>
+          <span class="spec-value" [style.font-size.px]="14 * (spec.fontSizeScale || 1.0)">{{ spec.valor }}</span>
+
+          @if (activeDragSpecId === spec.id) {
+            <div class="drag-action-bar" (mousedown)="$event.stopPropagation()">
+              <button class="btn-drag-action font-btn" (click)="adjustSpecFontSize(spec, -0.15, $event)" title="Diminuir Fonte">A-</button>
+              <button class="btn-drag-action font-btn" (click)="adjustSpecFontSize(spec, 0.15, $event)" title="Aumentar Fonte">A+</button>
+              <button class="btn-drag-action save" (click)="confirmSpecPosition($event)" title="Salvar Posição e Tamanho">
+                ✔ <span>Salvar</span>
+              </button>
+              <button class="btn-drag-action cancel" (click)="cancelSpecPosition($event)" title="Cancelar">
+                ✖ <span>Cancelar</span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- RIGHT GREEN RECTANGLE POSITION: DYNAMIC DRAGGABLE FLOATING SPECS FOR MODELO B (AZUL) -->
+    <div class="floating-specs-column specs-right-green">
+      @for (spec of slideB?.especificacoes || []; track spec.id) {
+        <div class="floating-spec-card blue" 
+             [style.transform]="'translate(' + (spec.posXOffset || 0) + 'px, ' + (spec.posYOffset || 0) + 'px)'"
+             [class.active-drag]="activeDragSpecId === spec.id"
+             (mousedown)="startSpecDrag($event, spec, 'B')">
+          <span class="spec-label" [style.font-size.px]="10 * (spec.fontSizeScale || 1.0)">{{ spec.titulo }}</span>
+          <span class="spec-value" [style.font-size.px]="14 * (spec.fontSizeScale || 1.0)">{{ spec.valor }}</span>
+
+          @if (activeDragSpecId === spec.id) {
+            <div class="drag-action-bar" (mousedown)="$event.stopPropagation()">
+              <button class="btn-drag-action font-btn" (click)="adjustSpecFontSize(spec, -0.15, $event)" title="Diminuir Fonte">A-</button>
+              <button class="btn-drag-action font-btn" (click)="adjustSpecFontSize(spec, 0.15, $event)" title="Aumentar Fonte">A+</button>
+              <button class="btn-drag-action save" (click)="confirmSpecPosition($event)" title="Salvar Posição e Tamanho">
+                ✔ <span>Salvar</span>
+              </button>
+              <button class="btn-drag-action cancel" (click)="cancelSpecPosition($event)" title="Cancelar">
+                ✖ <span>Cancelar</span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- LEFT SIDE: MODELO A (LILÁS) -->
+    <div #stageA class="model-stage-half stage-left">
+      <div class="stage-header-meta">
+        <span class="model-badge-tag lilac-tag">MODELO A</span>
+        <h2 class="model-title">{{ smartphoneA?.modelo || 'Galaxy Z Fold 7' }}</h2>
+        <span class="model-sub">{{ slideA?.tituloSlide || 'Especificações de Geração Anterior' }}</span>
+      </div>
+
+      <div class="phone-3d-stage glb-mode-stage">
+        <!-- AMBIENT NEON GLOW ATRÁS DO MODELO A -->
+        <div class="ambient-glow" [style.box-shadow]="getElementNeonBoxShadowA()"></div>
+
+        <div class="hardware-cutout-layer">
+          @if (slideA?.fotoModoFrame === 'modelo-3d-glb' && slideA?.modelo3DGlb && !isReloadingViewerA) {
+            <model-viewer
+              #modelViewerA
+              [src]="slideA?.modelo3DGlb || 'assets/models/z-fold8.glb'"
+              alt="Modelo 3D A"
+              [attr.camera-orbit]="slideA?.compareCameraOrbit || slideA?.cameraOrbit || '0deg 75deg auto'"
+              [attr.camera-target]="slideA?.compareCameraTarget || slideA?.cameraTarget || '0m 0m 0m'"
+              [attr.field-of-view]="slideA?.compareFieldOfView || slideA?.fieldOfView || 'auto'"
+              [attr.auto-rotate]="slideA?.compareAutoRotate3D ? '' : null"
+              [attr.rotation-per-second]="(slideA?.compareAutoRotateSpeed || 12) + 'deg'"
+              auto-rotate-delay="0"
+              camera-controls
+              interaction-prompt="none"
+              class="google-3d-viewer"
+              [style.filter]="getElementNeonFilterA()">
+            </model-viewer>
+          } @else {
+            <div class="frameless-smartphone-3d">
+              <img [src]="slideA?.imagemCutout || 'assets/phone-thumb-1.png'" alt="Modelo A" class="frameless-device-img">
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: MODELO B (AZUL) -->
+    <div #stageB class="model-stage-half stage-right">
+      <div class="stage-header-meta">
+        <span class="model-badge-tag blue-tag">MODELO B (EVOLUÇÃO)</span>
+        <h2 class="model-title">{{ smartphoneB?.modelo || 'Galaxy Z Fold 8 3D' }}</h2>
+        <span class="model-sub">{{ slideB?.tituloSlide || 'Construção em Flex Titanium & IP48' }}</span>
+      </div>
+
+      <div class="phone-3d-stage glb-mode-stage">
+        <!-- AMBIENT NEON GLOW ATRÁS DO MODELO B -->
+        <div class="ambient-glow" [style.box-shadow]="getElementNeonBoxShadowB()"></div>
+
+        <div class="hardware-cutout-layer">
+          @if (slideB?.fotoModoFrame === 'modelo-3d-glb' && slideB?.modelo3DGlb && !isReloadingViewerB) {
+            <model-viewer
+              #modelViewerB
+              [src]="slideB?.modelo3DGlb || 'assets/models/z-fold8.glb'"
+              alt="Modelo 3D B"
+              [attr.camera-orbit]="slideB?.compareCameraOrbit || slideB?.cameraOrbit || '0deg 75deg auto'"
+              [attr.camera-target]="slideB?.compareCameraTarget || slideB?.cameraTarget || '0m 0m 0m'"
+              [attr.field-of-view]="slideB?.compareFieldOfView || slideB?.fieldOfView || 'auto'"
+              [attr.auto-rotate]="slideB?.compareAutoRotate3D ? '' : null"
+              [attr.rotation-per-second]="(slideB?.compareAutoRotateSpeed || 12) + 'deg'"
+              auto-rotate-delay="0"
+              camera-controls
+              interaction-prompt="none"
+              class="google-3d-viewer"
+              [style.filter]="getElementNeonFilterB()">
+            </model-viewer>
+          } @else {
+            <div class="frameless-smartphone-3d">
+              <img [src]="slideB?.imagemCutout || 'assets/phone-thumb-1.png'" alt="Modelo B" class="frameless-device-img">
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION & PAIR SLIDER CONTROL BAR -->
+  <div class="slider-control-bar">
+    <button class="nav-arrow prev" (click)="prevPair()" aria-label="Par Anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+
+    <div class="slide-tabs">
+      @for (slide of smartphoneB?.slides; track slide.id; let i = $index) {
+        <button 
+          class="tab-item" 
+          [class.active]="i === activeSlideIndexB"
+          (click)="selectSlideA(i); selectSlideB(i);">
+          <span class="tab-label" [title]="slide.tituloSlide">Comparativo #{{ i + 1 }}: {{ (slide.tituloSlide && slide.tituloSlide.trim()) ? slide.tituloSlide : ('Slide #' + (i + 1)) }}</span>
+          <span class="tab-indicator"></span>
+        </button>
+      }
+    </div>
+
+    <button class="nav-arrow next" (click)="nextPair()" aria-label="Próximo Par">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+  <!-- SIDE DRAWER PANEL FOR CMS COMPARISON CONTROLS -->
+  @if (isEditMode && !isFullscreenMode) {
+    <div class="side-drawer-panel" [class.open]="isSideDrawerOpen">
+      <div class="drawer-header">
+        <div class="drawer-tabs-header">
+          <button class="drawer-tab-btn" [class.active]="activeDrawerTab === 'modelA'" (click)="openSideDrawer('modelA')">
+            <span>📱 Modelo A</span>
+          </button>
+          <button class="drawer-tab-btn" [class.active]="activeDrawerTab === 'modelB'" (click)="openSideDrawer('modelB')">
+            <span>📱 Modelo B</span>
+          </button>
+          <button class="drawer-tab-btn" [class.active]="activeDrawerTab === 'versus'" (click)="openSideDrawer('versus')">
+            <span>⚔️ Tabela VS</span>
+          </button>
+        </div>
+        <button class="drawer-close-btn" (click)="closeSideDrawer()">&times;</button>
+      </div>
+
+      <div class="drawer-content-scroll">
+        <!-- TAB MODELO A CONTROLS -->
+        @if (activeDrawerTab === 'modelA' && slideA) {
+          <div class="drawer-section">
+            <label class="upload-label-title">Seleção do Modelo A (Esquerda)</label>
+            <div class="drawer-form-group">
+              <select [ngModel]="smartphoneA?.id" (ngModelChange)="onModelASelected($event)">
+                @for (item of smartphonesList; track item.id) {
+                  <option [value]="item.id">{{ item.marca }} {{ item.modelo }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="drawer-form-group" style="margin-top: 8px;">
+              <label>📂 Carregar Modelo 3D (.GLB) para Modelo A</label>
+              <input type="file" accept=".glb,.gltf" (change)="onModelAFileSelected($event)">
+            </div>
+
+            <div class="drawer-3d-position-box" style="margin-top: 12px;">
+              <label class="upload-label-title">Posição, Zoom e Câmera 3D no Comparador (Modelo A)</label>
+              
+              <div class="drawer-form-group" style="margin-bottom: 10px;">
+                <label>🔍 Distância / Zoom 3D ({{ get3DDistanceA().toFixed(2) }}m)</label>
+                <input type="range" 
+                       [ngModel]="get3DDistanceA()" 
+                       (ngModelChange)="set3DDistanceA($event)" 
+                       min="0.4" 
+                       max="4.0" 
+                       step="0.05">
+              </div>
+
+              <div class="btn-3d-group">
+                <button class="btn-fix-3d" (click)="capture3DPositionA()">📌 Fixar Posição Modelo A (Comparador)</button>
+                <button class="btn-autorotate-toggle" [class.active]="slideA.compareAutoRotate3D" (click)="toggleAutoRotateA()">
+                  {{ slideA.compareAutoRotate3D ? '🔄 Rotação 3D: ATIVADA' : '🛑 Rotação 3D: DESATIVADA' }}
+                </button>
+                @if (slideA.compareAutoRotate3D) {
+                  <div class="drawer-form-group" style="margin-top: 6px;">
+                    <label>Velocidade ({{ slideA.compareAutoRotateSpeed || 12 }}°/s)</label>
+                    <input type="range" [(ngModel)]="slideA.compareAutoRotateSpeed" min="3" max="45" step="1" (input)="saveChanges()">
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="drawer-3d-position-box" style="margin-top: 12px; background: rgba(0, 242, 254, 0.08); border-color: rgba(0, 242, 254, 0.3);">
+              <label class="upload-label-title">✨ Neon Glow (Modelo A)</label>
+              <div class="drawer-form-group">
+                <label>Cor Neon</label>
+                <select [(ngModel)]="slideA.elementNeonColor" (change)="saveChanges()">
+                  @for (c of neonColorOptions; track c.value) {
+                    <option [value]="c.value">{{ c.label }}</option>
+                  }
+                </select>
+              </div>
+              <div class="drawer-form-group">
+                <label>Intensidade ({{ slideA.elementNeonIntensity !== undefined ? slideA.elementNeonIntensity : 0.5 }}x)</label>
+                <input type="range" [(ngModel)]="slideA.elementNeonIntensity" min="0" max="2" step="0.1" (input)="saveChanges()">
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- TAB MODELO B CONTROLS -->
+        @if (activeDrawerTab === 'modelB' && slideB) {
+          <div class="drawer-section">
+            <label class="upload-label-title">Seleção do Modelo B (Direita)</label>
+            <div class="drawer-form-group">
+              <select [ngModel]="smartphoneB?.id" (ngModelChange)="onModelBSelected($event)">
+                @for (item of smartphonesList; track item.id) {
+                  <option [value]="item.id">{{ item.marca }} {{ item.modelo }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="drawer-form-group" style="margin-top: 8px;">
+              <label>📂 Carregar Modelo 3D (.GLB) para Modelo B</label>
+              <input type="file" accept=".glb,.gltf" (change)="onModelBFileSelected($event)">
+            </div>
+
+            <div class="drawer-3d-position-box" style="margin-top: 12px;">
+              <label class="upload-label-title">Posição, Zoom e Câmera 3D no Comparador (Modelo B)</label>
+              
+              <div class="drawer-form-group" style="margin-bottom: 10px;">
+                <label>🔍 Distância / Zoom 3D ({{ get3DDistanceB().toFixed(2) }}m)</label>
+                <input type="range" 
+                       [ngModel]="get3DDistanceB()" 
+                       (ngModelChange)="set3DDistanceB($event)" 
+                       min="0.4" 
+                       max="4.0" 
+                       step="0.05">
+              </div>
+
+              <div class="btn-3d-group">
+                <button class="btn-fix-3d" (click)="capture3DPositionB()">📌 Fixar Posição Modelo B (Comparador)</button>
+                <button class="btn-autorotate-toggle" [class.active]="slideB.compareAutoRotate3D" (click)="toggleAutoRotateB()">
+                  {{ slideB.compareAutoRotate3D ? '🔄 Rotação 3D: ATIVADA' : '🛑 Rotação 3D: DESATIVADA' }}
+                </button>
+                @if (slideB.compareAutoRotate3D) {
+                  <div class="drawer-form-group" style="margin-top: 6px;">
+                    <label>Velocidade ({{ slideB.compareAutoRotateSpeed || 12 }}°/s)</label>
+                    <input type="range" [(ngModel)]="slideB.compareAutoRotateSpeed" min="3" max="45" step="1" (input)="saveChanges()">
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="drawer-3d-position-box" style="margin-top: 12px; background: rgba(121, 40, 202, 0.08); border-color: rgba(121, 40, 202, 0.3);">
+              <label class="upload-label-title">✨ Neon Glow (Modelo B)</label>
+              <div class="drawer-form-group">
+                <label>Cor Neon</label>
+                <select [(ngModel)]="slideB.elementNeonColor" (change)="saveChanges()">
+                  @for (c of neonColorOptions; track c.value) {
+                    <option [value]="c.value">{{ c.label }}</option>
+                  }
+                </select>
+              </div>
+              <div class="drawer-form-group">
+                <label>Intensidade ({{ slideB.elementNeonIntensity !== undefined ? slideB.elementNeonIntensity : 0.5 }}x)</label>
+                <input type="range" [(ngModel)]="slideB.elementNeonIntensity" min="0" max="2" step="0.1" (input)="saveChanges()">
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- TAB VERSUS SUMMARY TABLE CONTROLS -->
+        @if (activeDrawerTab === 'versus') {
+          <div class="drawer-section">
+            <label class="upload-label-title">⚔️ Resumo de Diferenças do Comparativo</label>
+            <p class="drawer-help-text">O comparativo calcula automaticamente as diferenças entre o Modelo A e o Modelo B com destaque visual neon.</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+</div>

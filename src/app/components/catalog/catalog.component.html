@@ -1,0 +1,122 @@
+<app-navbar></app-navbar>
+
+<div class="catalog-page-container">
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="hero-badge">CATÁLOGO INTERATIVO 2026</div>
+    <h1 class="hero-title">Engenharia em Silício & Fotografia Pro</h1>
+    <p class="hero-subtitle">
+      Explore os smartphones mais avançados do mundo com visualização interativa de especificações técnicas em tempo real.
+    </p>
+
+    <!-- Filter & Search Controls -->
+    <div class="controls-wrapper">
+      <div class="brand-filters">
+        @for (brand of brands; track brand) {
+          <button 
+            class="filter-btn" 
+            [class.active]="selectedBrand === brand"
+            (click)="filterByBrand(brand)">
+            {{ brand }}
+          </button>
+        }
+      </div>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input 
+          type="text" 
+          placeholder="Buscar modelo ou tecnologia..." 
+          (input)="onSearchChange($event)">
+      </div>
+    </div>
+  </section>
+
+  <!-- Devices Grid -->
+  <section class="devices-grid-section">
+    <div class="grid-container">
+      @for (phone of filteredSmartphones; track phone.id) {
+        <div class="device-card" [class.selected-for-compare]="isCompared(phone.id)">
+          <!-- Card Header & Badge -->
+          <div class="card-top-bar">
+            <span class="brand-tag">{{ phone.marca }}</span>
+            
+            <!-- CHECKBOX DE SELEÇÃO DE COMPARATIVO -->
+            <button 
+              class="btn-compare-checkbox" 
+              [class.checked]="isCompared(phone.id)"
+              (click)="toggleCompare(phone.id, $event)"
+              title="Marcar para comparar em 3D">
+              <div class="checkbox-box">
+                @if (isCompared(phone.id)) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                }
+              </div>
+              <span>{{ isCompared(phone.id) ? 'Selecionado' : 'Comparar ⚔️' }}</span>
+            </button>
+
+            <span class="price-tag">{{ phone.preco }}</span>
+          </div>
+
+          <!-- Phone Thumbnail Showcase -->
+          <div class="card-visual">
+            <div class="glow-bg" [style.background]="'radial-gradient(circle, ' + phone.corHex + ' 0%, transparent 70%)'"></div>
+            <div class="phone-mockup">
+              <div class="mockup-camera-bump"></div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="card-body">
+            <h2 class="device-title">{{ phone.modelo }}</h2>
+            <p class="device-tagline">{{ phone.tagline }}</p>
+
+            <!-- Highlights -->
+            <div class="highlights-list">
+              @for (item of phone.destaques; track item) {
+                <span class="highlight-pill">{{ item }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Card Action -->
+          <div class="card-footer">
+            <a [routerLink]="['/visualizador', phone.id]" class="btn-visualize">
+              <span>Explorar Hardware</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- BARRA FLUTUANTE INFERIOR DE DISPARO DO COMPARATIVO 3D -->
+  @if (selectedCompareIds.length > 0) {
+    <div class="floating-compare-bar">
+      <div class="compare-info">
+        <span class="compare-badge">⚔️ COMPARATIVO DUAL 3D</span>
+        <span class="compare-count">{{ selectedCompareIds.length }} de 2 modelos selecionados</span>
+      </div>
+      <div class="compare-actions">
+        <button class="btn-clear" (click)="clearCompareSelection()">Limpar</button>
+        <a 
+          [routerLink]="['/comparador']" 
+          [queryParams]="{ a: selectedCompareIds[0], b: selectedCompareIds[1] || selectedCompareIds[0] }" 
+          class="btn-launch-compare">
+          <span>Abrir Comparador 3D Lado a Lado ⚔️</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  }
+</div>

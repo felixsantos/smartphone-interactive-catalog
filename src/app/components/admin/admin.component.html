@@ -1,0 +1,288 @@
+<app-navbar></app-navbar>
+
+<div class="admin-page-container">
+  <!-- Toast Notification -->
+  @if (notificationMessage) {
+    <div class="toast-notification">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>{{ notificationMessage }}</span>
+    </div>
+  }
+
+  <!-- Admin Top Header Toolbar -->
+  <header class="admin-header">
+    <div class="header-titles">
+      <span class="admin-badge">GERENCIADOR CMS</span>
+      <h1 class="admin-title">Painel de Controle do Catálogo</h1>
+      <p class="admin-subtitle">Gerencie aparelhos, edite coordenadas das animações, imagens e exporte os arquivos JSON.</p>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="admin-actions-bar">
+      <button class="btn-action primary" (click)="addNewDevice()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Novo Celular</span>
+      </button>
+
+      <button class="btn-action secondary" (click)="exportJSON()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Baixar JSON</span>
+      </button>
+
+      <label class="btn-action secondary file-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Carregar JSON</span>
+        <input type="file" accept=".json" (change)="importJSON($event)" hidden>
+      </label>
+
+      <button class="btn-action danger" (click)="restoreDefaults()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>Restaurar Padrão</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Layout Grid -->
+  <div class="admin-layout-grid">
+    <!-- Left Sidebar: Devices Selector -->
+    <aside class="sidebar-devices">
+      <h3 class="sidebar-title">Modelos Cadastrados</h3>
+      <div class="devices-list">
+        @for (phone of smartphones; track phone.id) {
+          <div 
+            class="device-item-btn" 
+            [class.active]="selectedPhone?.id === phone.id"
+            (click)="selectPhone(phone)">
+            <div class="item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <div class="item-text">
+              <span class="item-brand">{{ phone.marca }}</span>
+              <span class="item-model">{{ phone.modelo }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    @if (selectedPhone) {
+      <main class="main-workspace">
+        
+        <!-- Device Info Form -->
+        <section class="card-box device-info-card">
+          <div class="box-header">
+            <h2>Dados Básicos do Aparelho</h2>
+            <button class="btn-sm-danger" (click)="deleteCurrentDevice()">Excluir Smartphone</button>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label>Marca</label>
+              <input type="text" [(ngModel)]="selectedPhone.marca" (change)="saveToStorage()">
+            </div>
+
+            <div class="form-group">
+              <label>Modelo</label>
+              <input type="text" [(ngModel)]="selectedPhone.modelo" (change)="saveToStorage()">
+            </div>
+
+            <div class="form-group">
+              <label>Preço</label>
+              <input type="text" [(ngModel)]="selectedPhone.preco" (change)="saveToStorage()">
+            </div>
+
+            <div class="form-group full-width">
+              <label>Tagline / Slogan</label>
+              <input type="text" [(ngModel)]="selectedPhone.tagline" (change)="saveToStorage()">
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide Manager & Callout Coordinates Workspace -->
+        <section class="card-box slides-workspace-card">
+          <div class="box-header">
+            <h2>Gerenciador de Slides & Coordenadas de Hardware</h2>
+            <button class="btn-sm-primary" (click)="addNewSlide()">+ Adicionar Slide</button>
+          </div>
+
+          <!-- Slide Tabs Selector -->
+          <div class="slides-tabs-nav">
+            @for (slide of selectedPhone.slides; track slide.id; let i = $index) {
+              <button 
+                class="tab-btn" 
+                [class.active]="i === activeSlideIndex"
+                (click)="selectSlide(i)">
+                <span>Slide {{ i + 1 }}: {{ slide.tituloSlide }}</span>
+              </button>
+            }
+          </div>
+
+          <!-- Active Slide Form -->
+          @if (selectedPhone.slides[activeSlideIndex]; as currentSlide) {
+            <div class="active-slide-body">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>Título do Slide</label>
+                  <input type="text" [(ngModel)]="currentSlide.tituloSlide" (change)="saveToStorage()">
+                </div>
+
+                <div class="form-group">
+                  <label>Subtítulo do Hardware</label>
+                  <input type="text" [(ngModel)]="currentSlide.subtituloSlide" (change)="saveToStorage()">
+                </div>
+
+                <div class="form-group full-width">
+                  <label>Descrição Curta</label>
+                  <textarea [(ngModel)]="currentSlide.descricaoSlide" (change)="saveToStorage()" rows="2"></textarea>
+                </div>
+              </div>
+
+              <!-- Callout Specifications Table -->
+              <div class="specs-table-box">
+                <div class="table-header">
+                  <h3>Especificações com Animação (Linhas/Badges)</h3>
+                  <button class="btn-sm-primary" (click)="openAddSpecModal()">+ Nova Especificação</button>
+                </div>
+
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Título</th>
+                      <th>Valor</th>
+                      <th>Posição X / Y</th>
+                      <th>Direção Seta</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (spec of currentSlide.especificacoes; track spec.id) {
+                      <tr>
+                        <td>
+                          <div class="spec-cell-title">
+                            <strong>{{ spec.titulo }}</strong>
+                          </div>
+                        </td>
+                        <td>{{ spec.valor }}</td>
+                        <td>
+                          <span class="badge-pos">X: {{ spec.posicaoX }}% | Y: {{ spec.posicaoY }}%</span>
+                        </td>
+                        <td>{{ spec.direcaoSeta }}</td>
+                        <td>
+                          <div class="row-actions">
+                            <button class="btn-icon" (click)="openEditSpecModal(spec)" title="Editar">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button class="btn-icon danger" (click)="deleteSpec(spec.id)" title="Excluir">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          }
+        </section>
+
+      </main>
+    }
+  </div>
+</div>
+
+<!-- Modal for Spec Callout Editor & Visual Position Picker -->
+@if (isEditingSpecModal && editingSpec) {
+  <div class="modal-backdrop" (click)="isEditingSpecModal = false">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isNewSpec ? 'Nova Especificação Animada' : 'Editar Especificação' }}</h2>
+        <button class="close-btn" (click)="isEditingSpecModal = false">&times;</button>
+      </div>
+
+      <div class="modal-body-split">
+        <!-- Left: Form Inputs -->
+        <div class="form-fields">
+          <div class="form-group">
+            <label>Título da Especificação</label>
+            <input type="text" [(ngModel)]="editingSpec.titulo" placeholder="ex: Lente Wide Principal">
+          </div>
+
+          <div class="form-group">
+            <label>Valor / Especificação Técnica</label>
+            <input type="text" [(ngModel)]="editingSpec.valor" placeholder="ex: 50 MP • f/1.78">
+          </div>
+
+          <div class="form-group">
+            <label>Detalhes Expandidos</label>
+            <textarea [(ngModel)]="editingSpec.detalhe" rows="2" placeholder="ex: Sensor Quad-Pixel com OIS..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Posição X (%)</label>
+              <input type="number" [(ngModel)]="editingSpec.posicaoX" min="0" max="100">
+            </div>
+
+            <div class="form-group">
+              <label>Posição Y (%)</label>
+              <input type="number" [(ngModel)]="editingSpec.posicaoY" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Direção da Seta / Linha SVG</label>
+            <select [(ngModel)]="editingSpec.direcaoSeta">
+              @for (dir of directionOptions; track dir) {
+                <option [value]="dir">{{ dir }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Ícone de Característica</label>
+            <select [(ngModel)]="editingSpec.icone">
+              @for (icon of iconOptions; track icon) {
+                <option [value]="icon">{{ icon }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Visual Target Picker (Clique para Definir Coordenadas!) -->
+        <div class="visual-picker-container">
+          <label class="picker-instruction">Clique na Imagem abaixo para Definir o Apontador (X/Y)</label>
+          <div 
+            #phoneFramePicker 
+            class="interactive-canvas" 
+            (click)="onFrameClick($event)">
+            
+            <div class="mockup-frame-bg"></div>
+
+            <!-- Target Reticle Pointer -->
+            <div 
+              class="picker-target-pointer" 
+              [style.left.%]="editingSpec.posicaoX" 
+              [style.top.%]="editingSpec.posicaoY">
+              <div class="target-ring"></div>
+              <div class="target-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-action secondary" (click)="isEditingSpecModal = false">Cancelar</button>
+        <button class="btn-action primary" (click)="saveSpecModal()">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+}
